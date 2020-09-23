@@ -129,11 +129,11 @@ Internet-Draft                     MLS                    September 2020
        10.1.1.  Add  . . . . . . . . . . . . . . . . . . . . . . . .  45
        10.1.2.  Update . . . . . . . . . . . . . . . . . . . . . . .  46
        10.1.3.  Remove . . . . . . . . . . . . . . . . . . . . . . .  46
-       10.1.4.  PSK  . . . . . . . . . . . . . . . . . . . . . . . .  47
+       10.1.4.  PreSharedKey . . . . . . . . . . . . . . . . . . . .  47
        10.1.5.  ReInit . . . . . . . . . . . . . . . . . . . . . . .  47
        10.1.6.  External Proposals . . . . . . . . . . . . . . . . .  47
      10.2.  Commit . . . . . . . . . . . . . . . . . . . . . . . . .  48
-       10.2.1.  Welcoming New Members  . . . . . . . . . . . . . . .  54
+       10.2.1.  Welcoming New Members  . . . . . . . . . . . . . . .  55
      10.3.  Ratchet Tree Extension . . . . . . . . . . . . . . . . .  58
    11. Extensibility . . . . . . . . . . . . . . . . . . . . . . . .  59
    12. Sequencing of State Changes . . . . . . . . . . . . . . . . .  60
@@ -1757,9 +1757,9 @@ Internet-Draft                     MLS                    September 2020
       state.
 
    The injection of one or more PSKs into the key schedule is signaled
-   in two ways: 1) as an extension to a Commit message that initiates a
-   new epoch and 2) in the "GroupSecrets" object of a Welcome message
-   sent to new members added in that epoch.
+   in two ways: 1) as a "psk" proposal and 2) in the "GroupSecrets"
+   object of a Welcome message sent to new members added in that epoch.
+
 
 
 
@@ -2413,9 +2413,9 @@ Internet-Draft                     MLS                    September 2020
 9.1.2.  Sub-group Branching
 
    If a client wants to create a subgroup of an existing group, they MAY
-   choose to include a "PSKId" in the "GroupSecrets" object of the
-   Welcome message choosing the "psktype" "branch", the "group_id" of
-   the group from which a subgroup is to be branched, as well as an
+   choose to include a "PreSharedKeyID" in the "GroupSecrets" object of
+   the Welcome message choosing the "psktype" "branch", the "group_id"
+   of the group from which a subgroup is to be branched, as well as an
    epoch within the number of epochs for which a "recovery_secret" is
    kept.
 
@@ -2471,7 +2471,7 @@ Internet-Draft                     MLS                    September 2020
        add(1),
        update(2),
        remove(3),
-       psk(4)
+       presharedkey(4)
        reinit(5)
        (255)
    } ProposalType;
@@ -2482,7 +2482,7 @@ Internet-Draft                     MLS                    September 2020
            case add:    Add;
            case update: Update;
            case remove: Remove;
-           case psk:    PSK;
+           case psk:    PreSharedKey;
            case reinit: ReInit;
        };
    } Proposal;
@@ -2578,19 +2578,20 @@ Barnes, et al.            Expires 27 March 2021                [Page 46]
 Internet-Draft                     MLS                    September 2020
 
 
-10.1.4.  PSK
+10.1.4.  PreSharedKey
 
-   A PSK proposal can be used to request that a PSK be injected into the
-   key schedule in the process of advancing the epoch.
+   A PreSharedKey proposal can be used to request that a PreSharedKey be
+   injected into the key schedule in the process of advancing the epoch.
 
    struct {
        PreSharedKeyID psk;
-   } PSK;
+   } PreSharedKey;
 
-   When processing a commit message including one or more PSK proposals,
-   a group member MUST derive the "psk_secret" for the inclusion in the
-   Key Schedule as described in Section 7.9, where the order of the PSKs
-   corresponds to the order of the PSK proposals in the commit.
+   When processing a Commit message including one or more PreSharedKey
+   proposals, a group member MUST derive the "psk_secret" for the
+   inclusion in the Key Schedule as described in Section 7.9, where the
+   order of the PSKs corresponds to the order of the PreSharedKey
+   proposals in the commit.
 
 10.1.5.  ReInit
 
@@ -2609,7 +2610,10 @@ Internet-Draft                     MLS                    September 2020
    A member of the group applies a ReInit message by waiting for the
    committer to send the Welcome message and by checking that the
    "group_id" and the parameters of the new group corresponds to the
-   ones specified in the proposal.
+   ones specified in the proposal.  The Welcome message MUST specify a
+   "PreSharedKey" with "psktype = reinit" and with "psk_group_id" and
+   "psk_epoch" equal to the "group_id" and "epoch" of the existing group
+   after the Commit containing the "reinit" Proposal was processed.
 
 10.1.6.  External Proposals
 
@@ -2620,10 +2624,6 @@ Internet-Draft                     MLS                    September 2020
    representing a real-world team.  Proposals originating outside the
    group are identified by a "preconfigured" or "new_member" SenderType
    in MLSPlaintext.
-
-
-
-
 
 
 
@@ -2702,14 +2702,14 @@ Internet-Draft                     MLS                    September 2020
    multiple Add proposals for the same client, the committer again
    chooses one to include and considers the rest invalid.
 
-   If there are multiple ReInit proposals, the commiter MUST choose the
-   committer MUST choose exactly one to include in the Commit message.
-   The "version" field in the ReInit proposal MUST be no less than the
-   version for the current group.  A client processing a Commit that
-   covers multiple ReInit proposals or a ReInit proposal with a lower
-   version MUST reject it as malformed.  The committer SHOULD choose a
-   ReInit proposal with a unique "group_id" and parameters that are
-   supported by all clients in the group.
+   If there are multiple ReInit proposals, the committer MUST choose
+   exactly one to include in the Commit message.  The "version" field in
+   the ReInit proposal MUST be no less than the version for the current
+   group.  A client processing a Commit that covers multiple ReInit
+   proposals or a ReInit proposal with a lower version MUST reject it as
+   malformed.  The committer SHOULD choose a ReInit proposal with a
+   unique "group_id" and parameters that are supported by all clients in
+   the group.
 
    The Commit MUST NOT combine proposals sent within different epochs.
    In the event that a valid proposal is omitted from the next Commit,
@@ -2802,7 +2802,7 @@ Barnes, et al.            Expires 27 March 2021                [Page 50]
 Internet-Draft                     MLS                    September 2020
 
 
-      -  PSK proposals are processed later when deriving the
+      -  PreSharedKey proposals are processed later when deriving the
          "psk_secret" for the Key Schedule.
 
       -  A ReInit proposal is applied by marking the group as "closed".
@@ -2835,10 +2835,11 @@ Internet-Draft                     MLS                    September 2020
       "parent_hash" extension.  Store it in the ratchet tree and assign
       it to the "key_package" field in the Commit object.
 
-   *  If one or more PSK proposals are part of the commit, derive the
-      "psk_secret" as specified in Section 7.9, where the order of PSKs
-      in the derivation corresponds to the order of PSK proposals in the
-      "proposals" vector.  Otherwise, set "psk_secret" to 0.
+   *  If one or more PreSharedKey proposals are part of the commit,
+      derive the "psk_secret" as specified in Section 7.9, where the
+      order of PSKs in the derivation corresponds to the order of
+      PreSharedKey proposals in the "proposals" vector.  Otherwise, set
+      "psk_secret" to 0.
 
    *  Construct an MLSPlaintext object containing the Commit object.
       Use the "commit_secret" and the "psk_secret" to advance the key
@@ -2849,7 +2850,6 @@ Internet-Draft                     MLS                    September 2020
    *  Update the tree in the provisional state by applying the direct
       path
 
-   *  Construct a GroupInfo reflecting the new state:
 
 
 
@@ -2857,6 +2857,8 @@ Barnes, et al.            Expires 27 March 2021                [Page 51]
 
 Internet-Draft                     MLS                    September 2020
 
+
+   *  Construct a GroupInfo reflecting the new state:
 
       -  Group ID, epoch, tree, confirmed transcript hash, and interim
          transcript hash from the new state
@@ -2883,7 +2885,7 @@ Internet-Draft                     MLS                    September 2020
    *  Construct a Welcome message from the encrypted GroupInfo object,
       the encrypted key packages and any PSK for which a proposal was
       included in the commit.  The order of the "psks" MUST be the same
-      as the order of PSK proposals in the "proposals" vector.
+      as the order of PreSharedKey proposals in the "proposals" vector.
 
    *  If a ReInit proposal was part of the Commit, the committer MUST
       create a new group with the Group ID and the parameters specified
@@ -2904,8 +2906,6 @@ Internet-Draft                     MLS                    September 2020
       using the public key from the credential stored at the leaf in the
       tree indicated by the "sender" field.
 
-   *  Verify that all PSKs specified in any PSK proposals in the
-      "proposals" vector are available.
 
 
 
@@ -2913,6 +2913,9 @@ Barnes, et al.            Expires 27 March 2021                [Page 52]
 
 Internet-Draft                     MLS                    September 2020
 
+
+   *  Verify that all PSKs specified in any PreSharedKey proposals in
+      the "proposals" vector are available.
 
    *  Verify that at most one ReInit proposal is present and that the
       "mls_version" field indicates an equal or higher version that that
@@ -2955,10 +2958,7 @@ Internet-Draft                     MLS                    September 2020
    *  Update the new GroupContext's confirmed and interim transcript
       hashes using the new Commit.
 
-   *  If the "proposals" vector contains any PSK proposals, derive the
-      "psk_secret" as specified in Section 7.9, where the order of PSKs
-      in the derivation corresponds to the order of PSK proposals in the
-      "proposals" vector.  Otherwise, set "psk_secret" to 0.
+
 
 
 
@@ -2969,6 +2969,12 @@ Barnes, et al.            Expires 27 March 2021                [Page 53]
 
 Internet-Draft                     MLS                    September 2020
 
+
+   *  If the "proposals" vector contains any PreSharedKey proposals,
+      derive the "psk_secret" as specified in Section 7.9, where the
+      order of PSKs in the derivation corresponds to the order of
+      PreSharedKey proposals in the "proposals" vector.  Otherwise, set
+      "psk_secret" to 0.
 
    *  Use the "commit_secret", the "psk_secret", the provisional
       GroupContext, and the init secret from the previous epoch to
@@ -3006,15 +3012,9 @@ Internet-Draft                     MLS                    September 2020
 MLSPlaintext.confirmation_tag =
     KDF.Extract(confirmation_key, GroupContext.confirmed_transcript_hash)
 
-10.2.1.  Welcoming New Members
 
-   The sender of a Commit message is responsible for sending a Welcome
-   message to any new members added via Add proposals.  The Welcome
-   message provides the new members with the current state of the group,
-   after the application of the Commit message.  The new members will
-   not be able to decrypt or verify the Commit message, but will have
-   the secrets they need to participate in the epoch initiated by the
-   Commit message.
+
+
 
 
 
@@ -3025,6 +3025,16 @@ Barnes, et al.            Expires 27 March 2021                [Page 54]
 
 Internet-Draft                     MLS                    September 2020
 
+
+10.2.1.  Welcoming New Members
+
+   The sender of a Commit message is responsible for sending a Welcome
+   message to any new members added via Add proposals.  The Welcome
+   message provides the new members with the current state of the group,
+   after the application of the Commit message.  The new members will
+   not be able to decrypt or verify the Commit message, but will have
+   the secrets they need to participate in the epoch initiated by the
+   Commit message.
 
    In order to allow the same Welcome message to be sent to all new
    members, information describing the group is encrypted with a
@@ -3042,16 +3052,6 @@ Internet-Draft                     MLS                    September 2020
    Welcome message is sent in the context of a group re-initialization
    and it SHOULD be included if the Welcome message is sent to create a
    sub-group of an existing group.
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3147,8 +3147,8 @@ Internet-Draft                     MLS                    September 2020
 
    *  Decrypt the "encrypted_group_secrets" using HPKE with the
       algorithms indicated by the ciphersuite and the HPKE private key
-      corresponding to the GroupSecrets.  If a PSKId is part of the
-      GroupSecrets and the client is not in possession of the
+      corresponding to the GroupSecrets.  If a "PreSharedKeyID" is part
+      of the GroupSecrets and the client is not in possession of the
       corresponding PSK, return an error.
 
    *  From the "joiner_secret" in the decrypted GroupSecrets object and
