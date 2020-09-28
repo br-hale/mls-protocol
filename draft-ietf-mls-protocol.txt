@@ -5,7 +5,7 @@
 Network Working Group                                          R. Barnes
 Internet-Draft                                                     Cisco
 Intended status: Informational                             B. Beurdouche
-Expires: 27 March 2021                                             Inria
+Expires: 1 April 2021                                              Inria
                                                              J. Millican
                                                                 Facebook
                                                                 E. Omara
@@ -14,7 +14,7 @@ Expires: 27 March 2021                                             Inria
                                                     University of Oxford
                                                                R. Robert
                                                                     Wire
-                                                       23 September 2020
+                                                       28 September 2020
 
 
               The Messaging Layer Security (MLS) Protocol
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 1]
+Barnes, et al.            Expires 1 April 2021                  [Page 1]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -63,7 +63,7 @@ Internet-Draft                     MLS                    September 2020
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 March 2021.
+   This Internet-Draft will expire on 1 April 2021.
 
 Copyright Notice
 
@@ -105,67 +105,67 @@ Table of Contents
      7.7.  Update Paths  . . . . . . . . . . . . . . . . . . . . . .  28
      7.8.  Key Schedule  . . . . . . . . . . . . . . . . . . . . . .  29
      7.9.  Pre-Shared Keys . . . . . . . . . . . . . . . . . . . . .  31
-     7.10. Encryption Keys . . . . . . . . . . . . . . . . . . . . .  34
+     7.10. Encryption Keys . . . . . . . . . . . . . . . . . . . . .  33
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 2]
+Barnes, et al.            Expires 1 April 2021                  [Page 2]
 
 Internet-Draft                     MLS                    September 2020
 
 
-     7.11. Exporters . . . . . . . . . . . . . . . . . . . . . . . .  35
+     7.11. Exporters . . . . . . . . . . . . . . . . . . . . . . . .  34
      7.12. Recovery Keys . . . . . . . . . . . . . . . . . . . . . .  35
-     7.13. State Authentication Keys . . . . . . . . . . . . . . . .  36
-   8.  Message Framing . . . . . . . . . . . . . . . . . . . . . . .  36
-     8.1.  Metadata Encryption . . . . . . . . . . . . . . . . . . .  38
-     8.2.  Content Signing and Encryption  . . . . . . . . . . . . .  39
-   9.  Group Creation  . . . . . . . . . . . . . . . . . . . . . . .  42
-     9.1.  Linking a New Group to an Existing Group  . . . . . . . .  43
-       9.1.1.  Re-Initialization . . . . . . . . . . . . . . . . . .  43
-       9.1.2.  Sub-group Branching . . . . . . . . . . . . . . . . .  44
-   10. Group Evolution . . . . . . . . . . . . . . . . . . . . . . .  44
-     10.1.  Proposals  . . . . . . . . . . . . . . . . . . . . . . .  44
-       10.1.1.  Add  . . . . . . . . . . . . . . . . . . . . . . . .  45
-       10.1.2.  Update . . . . . . . . . . . . . . . . . . . . . . .  46
-       10.1.3.  Remove . . . . . . . . . . . . . . . . . . . . . . .  46
-       10.1.4.  PreSharedKey . . . . . . . . . . . . . . . . . . . .  47
-       10.1.5.  ReInit . . . . . . . . . . . . . . . . . . . . . . .  47
-       10.1.6.  External Proposals . . . . . . . . . . . . . . . . .  47
-     10.2.  Commit . . . . . . . . . . . . . . . . . . . . . . . . .  48
-       10.2.1.  Welcoming New Members  . . . . . . . . . . . . . . .  55
-     10.3.  Ratchet Tree Extension . . . . . . . . . . . . . . . . .  58
-   11. Extensibility . . . . . . . . . . . . . . . . . . . . . . . .  59
-   12. Sequencing of State Changes . . . . . . . . . . . . . . . . .  60
-     12.1.  Server-Enforced Ordering . . . . . . . . . . . . . . . .  61
-     12.2.  Client-Enforced Ordering . . . . . . . . . . . . . . . .  62
-   13. Application Messages  . . . . . . . . . . . . . . . . . . . .  62
-     13.1.  Tree of Application Secrets  . . . . . . . . . . . . . .  63
-     13.2.  Deletion Schedule  . . . . . . . . . . . . . . . . . . .  64
-     13.3.  Further Restrictions . . . . . . . . . . . . . . . . . .  65
-     13.4.  Message Encryption and Decryption  . . . . . . . . . . .  65
-     13.5.  Delayed and Reordered Application messages . . . . . . .  66
-   14. Security Considerations . . . . . . . . . . . . . . . . . . .  66
-     14.1.  Confidentiality of the Group Secrets . . . . . . . . . .  67
-     14.2.  Authentication . . . . . . . . . . . . . . . . . . . . .  67
-     14.3.  Forward and post-compromise security . . . . . . . . . .  67
-     14.4.  InitKey Reuse  . . . . . . . . . . . . . . . . . . . . .  68
-   15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  68
-     15.1.  MLS Ciphersuites . . . . . . . . . . . . . . . . . . . .  68
-     15.2.  MLS Extension Types  . . . . . . . . . . . . . . . . . .  71
-     15.3.  MLS Credential Types . . . . . . . . . . . . . . . . . .  72
-     15.4.  MLS Designated Expert Pool . . . . . . . . . . . . . . .  73
-   16. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  74
-   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  75
-     17.1.  Normative References . . . . . . . . . . . . . . . . . .  75
-     17.2.  Informative References . . . . . . . . . . . . . . . . .  76
-   Appendix A.  Tree Math  . . . . . . . . . . . . . . . . . . . . .  77
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  81
+     7.13. State Authentication Keys . . . . . . . . . . . . . . . .  35
+   8.  Message Framing . . . . . . . . . . . . . . . . . . . . . . .  35
+     8.1.  Metadata Encryption . . . . . . . . . . . . . . . . . . .  37
+     8.2.  Content Signing and Encryption  . . . . . . . . . . . . .  38
+   9.  Group Creation  . . . . . . . . . . . . . . . . . . . . . . .  41
+     9.1.  Linking a New Group to an Existing Group  . . . . . . . .  42
+       9.1.1.  Re-Initialization . . . . . . . . . . . . . . . . . .  42
+       9.1.2.  Sub-group Branching . . . . . . . . . . . . . . . . .  43
+   10. Group Evolution . . . . . . . . . . . . . . . . . . . . . . .  43
+     10.1.  Proposals  . . . . . . . . . . . . . . . . . . . . . . .  43
+       10.1.1.  Add  . . . . . . . . . . . . . . . . . . . . . . . .  44
+       10.1.2.  Update . . . . . . . . . . . . . . . . . . . . . . .  45
+       10.1.3.  Remove . . . . . . . . . . . . . . . . . . . . . . .  45
+       10.1.4.  PreSharedKey . . . . . . . . . . . . . . . . . . . .  46
+       10.1.5.  ReInit . . . . . . . . . . . . . . . . . . . . . . .  46
+       10.1.6.  External Proposals . . . . . . . . . . . . . . . . .  46
+     10.2.  Commit . . . . . . . . . . . . . . . . . . . . . . . . .  47
+       10.2.1.  Welcoming New Members  . . . . . . . . . . . . . . .  54
+     10.3.  Ratchet Tree Extension . . . . . . . . . . . . . . . . .  57
+   11. Extensibility . . . . . . . . . . . . . . . . . . . . . . . .  58
+   12. Sequencing of State Changes . . . . . . . . . . . . . . . . .  59
+     12.1.  Server-Enforced Ordering . . . . . . . . . . . . . . . .  60
+     12.2.  Client-Enforced Ordering . . . . . . . . . . . . . . . .  61
+   13. Application Messages  . . . . . . . . . . . . . . . . . . . .  61
+     13.1.  Tree of Application Secrets  . . . . . . . . . . . . . .  62
+     13.2.  Deletion Schedule  . . . . . . . . . . . . . . . . . . .  63
+     13.3.  Further Restrictions . . . . . . . . . . . . . . . . . .  64
+     13.4.  Message Encryption and Decryption  . . . . . . . . . . .  64
+     13.5.  Delayed and Reordered Application messages . . . . . . .  65
+   14. Security Considerations . . . . . . . . . . . . . . . . . . .  65
+     14.1.  Confidentiality of the Group Secrets . . . . . . . . . .  66
+     14.2.  Authentication . . . . . . . . . . . . . . . . . . . . .  66
+     14.3.  Forward and post-compromise security . . . . . . . . . .  66
+     14.4.  InitKey Reuse  . . . . . . . . . . . . . . . . . . . . .  67
+   15. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  67
+     15.1.  MLS Ciphersuites . . . . . . . . . . . . . . . . . . . .  67
+     15.2.  MLS Extension Types  . . . . . . . . . . . . . . . . . .  70
+     15.3.  MLS Credential Types . . . . . . . . . . . . . . . . . .  71
+     15.4.  MLS Designated Expert Pool . . . . . . . . . . . . . . .  72
+   16. Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  73
+   17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  74
+     17.1.  Normative References . . . . . . . . . . . . . . . . . .  74
+     17.2.  Informative References . . . . . . . . . . . . . . . . .  75
+   Appendix A.  Tree Math  . . . . . . . . . . . . . . . . . . . . .  76
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  80
 
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 3]
+Barnes, et al.            Expires 1 April 2021                  [Page 3]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -221,7 +221,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 4]
+Barnes, et al.            Expires 1 April 2021                  [Page 4]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -277,7 +277,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 5]
+Barnes, et al.            Expires 1 April 2021                  [Page 5]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -333,7 +333,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 6]
+Barnes, et al.            Expires 1 April 2021                  [Page 6]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -389,7 +389,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 7]
+Barnes, et al.            Expires 1 April 2021                  [Page 7]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -445,7 +445,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 8]
+Barnes, et al.            Expires 1 April 2021                  [Page 8]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -501,7 +501,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                 [Page 9]
+Barnes, et al.            Expires 1 April 2021                  [Page 9]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -557,7 +557,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 10]
+Barnes, et al.            Expires 1 April 2021                 [Page 10]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -613,7 +613,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 11]
+Barnes, et al.            Expires 1 April 2021                 [Page 11]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -669,7 +669,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 12]
+Barnes, et al.            Expires 1 April 2021                 [Page 12]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -725,7 +725,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 13]
+Barnes, et al.            Expires 1 April 2021                 [Page 13]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -781,7 +781,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 14]
+Barnes, et al.            Expires 1 April 2021                 [Page 14]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -837,7 +837,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 15]
+Barnes, et al.            Expires 1 April 2021                 [Page 15]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -893,7 +893,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 16]
+Barnes, et al.            Expires 1 April 2021                 [Page 16]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -949,7 +949,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 17]
+Barnes, et al.            Expires 1 April 2021                 [Page 17]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1005,7 +1005,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 18]
+Barnes, et al.            Expires 1 April 2021                 [Page 18]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1061,7 +1061,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 19]
+Barnes, et al.            Expires 1 April 2021                 [Page 19]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1117,7 +1117,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 20]
+Barnes, et al.            Expires 1 April 2021                 [Page 20]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1173,7 +1173,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 21]
+Barnes, et al.            Expires 1 April 2021                 [Page 21]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1229,7 +1229,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 22]
+Barnes, et al.            Expires 1 April 2021                 [Page 22]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1285,7 +1285,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 23]
+Barnes, et al.            Expires 1 April 2021                 [Page 23]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1341,7 +1341,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 24]
+Barnes, et al.            Expires 1 April 2021                 [Page 24]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1397,7 +1397,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 25]
+Barnes, et al.            Expires 1 April 2021                 [Page 25]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1453,7 +1453,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 26]
+Barnes, et al.            Expires 1 April 2021                 [Page 26]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1509,7 +1509,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 27]
+Barnes, et al.            Expires 1 April 2021                 [Page 27]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1565,7 +1565,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 28]
+Barnes, et al.            Expires 1 April 2021                 [Page 28]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1621,7 +1621,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 29]
+Barnes, et al.            Expires 1 April 2021                 [Page 29]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1677,7 +1677,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 30]
+Barnes, et al.            Expires 1 April 2021                 [Page 30]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1733,7 +1733,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 31]
+Barnes, et al.            Expires 1 April 2021                 [Page 31]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -1745,12 +1745,6 @@ Internet-Draft                     MLS                    September 2020
       from the old group forward into a new group with the desired
       parameters.
 
-   *  Recovery: If the group state of one or more members of the group
-      deviates from the rest, they can be re-added to the group such
-      that participants who were group members at the time of deviation
-      and are still in the group can verify that the added member was
-      previously in the group.
-
    *  Branching: A PSK may be used to bootstrap a subset of current
       group members into a new group.  This applies if a subset of
       current group members wish to branch based on the current group
@@ -1759,40 +1753,6 @@ Internet-Draft                     MLS                    September 2020
    The injection of one or more PSKs into the key schedule is signaled
    in two ways: 1) as a "psk" proposal and 2) in the "GroupSecrets"
    object of a Welcome message sent to new members added in that epoch.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 32]
-
-Internet-Draft                     MLS                    September 2020
-
 
    enum {
      external(0),
@@ -1826,6 +1786,14 @@ Internet-Draft                     MLS                    September 2020
    GroupSecrets object with the psk field set, the receiving Client
    includes them in the key schedule in the order listed in the commit.
    For internal PSKs, the psk is defined as the "recovery_secret" of the
+
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 32]
+
+Internet-Draft                     MLS                    September 2020
+
+
    group and epoch specified in the "PreSharedKeyID" object.  Finally,
    the "psk_secret" to be included in the Key Schedule is derived as
    follows (where "n" is the number of PSKs):
@@ -1839,16 +1807,6 @@ struct {
 psk_input_[i] = KDF.Extract(0, psk_[i])
 psk_secret_[i] = ExpandWithLabel(psk_input_[i], "derived psk", PSKLabel, KDF.Nh)
 psk_secret     = psk_secret_[i] || ... || psk_secret_[n]
-
-
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 33]
-
-Internet-Draft                     MLS                    September 2020
-
 
 7.10.  Encryption Keys
 
@@ -1883,6 +1841,15 @@ Internet-Draft                     MLS                    September 2020
    handshake_secret_[sender]_[0] =
        ExpandWithLabel(handshake_secret, "hs", [sender], nonce_length)
 
+
+
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 33]
+
+Internet-Draft                     MLS                    September 2020
+
+
    The base secret for each sender is used to initiate a symmetric hash
    ratchet which generates a sequence of keys and nonces.  The sender
    uses the j-th key/nonce pair in the sequence to encrypt (using the
@@ -1896,15 +1863,6 @@ Internet-Draft                     MLS                    September 2020
    the ratchet.  In particular, the index of the sender's leaf in the
    ratchet tree is the same as the index of the leaf in the AS Tree used
    to initialize the sender's ratchet.
-
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 34]
-
-Internet-Draft                     MLS                    September 2020
-
 
    ratchet_secret_[N]_[j]
          |
@@ -1939,6 +1897,15 @@ Internet-Draft                     MLS                    September 2020
    two exported outputs from being generated with the same values and
    used for different functionalities.
 
+
+
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 34]
+
+Internet-Draft                     MLS                    September 2020
+
+
    The exported values are bound to the Group epoch from which the
    "exporter_secret" is derived, hence reflects a particular state of
    the Group.
@@ -1953,14 +1920,6 @@ Internet-Draft                     MLS                    September 2020
 
    The application SHOULD specify an upper limit on the number of past
    epochs for which the "recovery_secret" may be stored.
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 35]
-
-Internet-Draft                     MLS                    September 2020
-
 
    There are three ways in which a "recovery_secret" can be used: to re-
    initialize the group with different parameters, to re-add lost group
@@ -1995,6 +1954,14 @@ Internet-Draft                     MLS                    September 2020
    MLSCiphertext represents a signed and encrypted message, with
    protections for both the content of the message and related metadata.
    MLSPlaintext represents a message that is only signed, and not
+
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 35]
+
+Internet-Draft                     MLS                    September 2020
+
+
    encrypted.  Applications MUST use MLSCiphertext to encrypt
    application messages and SHOULD use MLSCiphertext to encode handshake
    messages, but MAY transmit handshake messages encoded as MLSPlaintext
@@ -2010,14 +1977,6 @@ Internet-Draft                     MLS                    September 2020
    } ContentType;
 
    enum {
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 36]
-
-Internet-Draft                     MLS                    September 2020
-
-
        reserved(0),
        member(1),
        preconfigured(2),
@@ -2052,6 +2011,13 @@ Internet-Draft                     MLS                    September 2020
        opaque signature<0..2^16-1>;
    } MLSPlaintext;
 
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 36]
+
+Internet-Draft                     MLS                    September 2020
+
+
    struct {
        opaque group_id<0..255>;
        uint64 epoch;
@@ -2064,15 +2030,6 @@ Internet-Draft                     MLS                    September 2020
 
    External sender types are sent as MLSPlaintext, see Section 10.1.6
    for their use.
-
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 37]
-
-Internet-Draft                     MLS                    September 2020
-
 
    The remainder of this section describes how to compute the signature
    of an MLSPlaintext object and how to convert it to an MLSCiphertext
@@ -2107,6 +2064,16 @@ Internet-Draft                     MLS                    September 2020
    the sender_data_key from the keyschedule.  It is encoded as an object
    of the following form:
 
+
+
+
+
+
+Barnes, et al.            Expires 1 April 2021                 [Page 37]
+
+Internet-Draft                     MLS                    September 2020
+
+
    struct {
        uint32 sender;
        uint32 generation;
@@ -2121,14 +2088,6 @@ Internet-Draft                     MLS                    September 2020
    The "reuse_guard" field contains a fresh random value used to avoid
    nonce reuse in the case of state loss or corruption, as described in
    Section 8.2.
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 38]
-
-Internet-Draft                     MLS                    September 2020
-
 
    The Additional Authenticated Data (AAD) for the SenderData ciphertext
    computation is its prefix in the MLSCiphertext, namely:
@@ -2166,22 +2125,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Barnes, et al.            Expires 27 March 2021                [Page 39]
+Barnes, et al.            Expires 1 April 2021                 [Page 38]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2237,7 +2181,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 40]
+Barnes, et al.            Expires 1 April 2021                 [Page 39]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2293,7 +2237,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 41]
+Barnes, et al.            Expires 1 April 2021                 [Page 40]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2349,7 +2293,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 42]
+Barnes, et al.            Expires 1 April 2021                 [Page 41]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2405,7 +2349,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 43]
+Barnes, et al.            Expires 1 April 2021                 [Page 42]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2461,7 +2405,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 44]
+Barnes, et al.            Expires 1 April 2021                 [Page 43]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2517,7 +2461,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 45]
+Barnes, et al.            Expires 1 April 2021                 [Page 44]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2573,7 +2517,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 46]
+Barnes, et al.            Expires 1 April 2021                 [Page 45]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2629,7 +2573,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 47]
+Barnes, et al.            Expires 1 April 2021                 [Page 46]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2685,7 +2629,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 48]
+Barnes, et al.            Expires 1 April 2021                 [Page 47]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2741,7 +2685,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 49]
+Barnes, et al.            Expires 1 April 2021                 [Page 48]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2797,7 +2741,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 50]
+Barnes, et al.            Expires 1 April 2021                 [Page 49]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2853,7 +2797,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 51]
+Barnes, et al.            Expires 1 April 2021                 [Page 50]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2909,7 +2853,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 52]
+Barnes, et al.            Expires 1 April 2021                 [Page 51]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -2965,7 +2909,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 53]
+Barnes, et al.            Expires 1 April 2021                 [Page 52]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3021,7 +2965,7 @@ MLSPlaintext.confirmation_tag =
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 54]
+Barnes, et al.            Expires 1 April 2021                 [Page 53]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3077,7 +3021,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 55]
+Barnes, et al.            Expires 1 April 2021                 [Page 54]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3133,7 +3077,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 56]
+Barnes, et al.            Expires 1 April 2021                 [Page 55]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3189,7 +3133,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 57]
+Barnes, et al.            Expires 1 April 2021                 [Page 56]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3245,7 +3189,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 58]
+Barnes, et al.            Expires 1 April 2021                 [Page 57]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3301,7 +3245,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 59]
+Barnes, et al.            Expires 1 April 2021                 [Page 58]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3357,7 +3301,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 60]
+Barnes, et al.            Expires 1 April 2021                 [Page 59]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3413,7 +3357,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 61]
+Barnes, et al.            Expires 1 April 2021                 [Page 60]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3469,7 +3413,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 62]
+Barnes, et al.            Expires 1 April 2021                 [Page 61]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3525,7 +3469,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 63]
+Barnes, et al.            Expires 1 April 2021                 [Page 62]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3581,7 +3525,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 64]
+Barnes, et al.            Expires 1 April 2021                 [Page 63]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3637,7 +3581,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 65]
+Barnes, et al.            Expires 1 April 2021                 [Page 64]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3693,7 +3637,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 66]
+Barnes, et al.            Expires 1 April 2021                 [Page 65]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3749,7 +3693,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 67]
+Barnes, et al.            Expires 1 April 2021                 [Page 66]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3805,7 +3749,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 68]
+Barnes, et al.            Expires 1 April 2021                 [Page 67]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3861,7 +3805,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 69]
+Barnes, et al.            Expires 1 April 2021                 [Page 68]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3917,7 +3861,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 70]
+Barnes, et al.            Expires 1 April 2021                 [Page 69]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -3973,7 +3917,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 71]
+Barnes, et al.            Expires 1 April 2021                 [Page 70]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4029,7 +3973,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 72]
+Barnes, et al.            Expires 1 April 2021                 [Page 71]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4085,7 +4029,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 73]
+Barnes, et al.            Expires 1 April 2021                 [Page 72]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4141,7 +4085,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 74]
+Barnes, et al.            Expires 1 April 2021                 [Page 73]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4197,7 +4141,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 75]
+Barnes, et al.            Expires 1 April 2021                 [Page 74]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4253,7 +4197,7 @@ Internet-Draft                     MLS                    September 2020
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 76]
+Barnes, et al.            Expires 1 April 2021                 [Page 75]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4309,7 +4253,7 @@ Appendix A.  Tree Math
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 77]
+Barnes, et al.            Expires 1 April 2021                 [Page 76]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4365,7 +4309,7 @@ def node_width(n):
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 78]
+Barnes, et al.            Expires 1 April 2021                 [Page 77]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4421,7 +4365,7 @@ def sibling(x, n):
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 79]
+Barnes, et al.            Expires 1 April 2021                 [Page 78]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4477,7 +4421,7 @@ def common_ancestor_direct(x, y, _):
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 80]
+Barnes, et al.            Expires 1 April 2021                 [Page 79]
 
 Internet-Draft                     MLS                    September 2020
 
@@ -4533,4 +4477,4 @@ Authors' Addresses
 
 
 
-Barnes, et al.            Expires 27 March 2021                [Page 81]
+Barnes, et al.            Expires 1 April 2021                 [Page 80]
