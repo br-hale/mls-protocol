@@ -118,7 +118,7 @@ Internet-Draft                     MLS                    September 2020
      7.12. Recovery Keys . . . . . . . . . . . . . . . . . . . . . .  35
      7.13. State Authentication Keys . . . . . . . . . . . . . . . .  35
    8.  Message Framing . . . . . . . . . . . . . . . . . . . . . . .  35
-     8.1.  Metadata Encryption . . . . . . . . . . . . . . . . . . .  37
+     8.1.  Metadata Encryption . . . . . . . . . . . . . . . . . . .  38
      8.2.  Content Signing and Encryption  . . . . . . . . . . . . .  38
    9.  Group Creation  . . . . . . . . . . . . . . . . . . . . . . .  41
      9.1.  Linking a New Group to an Existing Group  . . . . . . . .  42
@@ -1940,8 +1940,12 @@ Internet-Draft                     MLS                    September 2020
    from exporter keys in that they have specific use affecting the MLS
    protocol.
 
-   Authentication keys MAY be used to authenticate current or past group
-   members out-of-band.
+   Members of a group MAY compare their "authentication_secrets" out-of-
+   band to authenticate that they share the same view of the group.
+
+   If one of the parties is being actively impersonated by an attacker,
+   their "authentication_secret" will differ from that of the other
+   group members.
 
 8.  Message Framing
 
@@ -1950,10 +1954,6 @@ Internet-Draft                     MLS                    September 2020
    group, as well as signing to authenticate the sender within the
    group.
 
-   The two main structures involved are MLSPlaintext and MLSCiphertext.
-   MLSCiphertext represents a signed and encrypted message, with
-   protections for both the content of the message and related metadata.
-   MLSPlaintext represents a message that is only signed, and not
 
 
 
@@ -1962,6 +1962,10 @@ Barnes, et al.            Expires 1 April 2021                 [Page 35]
 Internet-Draft                     MLS                    September 2020
 
 
+   The two main structures involved are MLSPlaintext and MLSCiphertext.
+   MLSCiphertext represents a signed and encrypted message, with
+   protections for both the content of the message and related metadata.
+   MLSPlaintext represents a message that is only signed, and not
    encrypted.  Applications MUST use MLSCiphertext to encrypt
    application messages and SHOULD use MLSCiphertext to encode handshake
    messages, but MAY transmit handshake messages encoded as MLSPlaintext
@@ -2006,10 +2010,6 @@ Internet-Draft                     MLS                    September 2020
            case commit:
              Commit commit;
              opaque confirmation_tag<0..255>;
-       }
-
-       opaque signature<0..2^16-1>;
-   } MLSPlaintext;
 
 
 
@@ -2017,6 +2017,11 @@ Barnes, et al.            Expires 1 April 2021                 [Page 36]
 
 Internet-Draft                     MLS                    September 2020
 
+
+       }
+
+       opaque signature<0..2^16-1>;
+   } MLSPlaintext;
 
    struct {
        opaque group_id<0..255>;
@@ -2057,12 +2062,7 @@ Internet-Draft                     MLS                    September 2020
    The following sections describe the encryption and signing processes
    in detail.
 
-8.1.  Metadata Encryption
 
-   The "sender data" used to look up the key for the content encryption
-   is encrypted under AEAD using the MLSCiphertext sender_data_nonce and
-   the sender_data_key from the keyschedule.  It is encoded as an object
-   of the following form:
 
 
 
@@ -2073,6 +2073,13 @@ Barnes, et al.            Expires 1 April 2021                 [Page 37]
 
 Internet-Draft                     MLS                    September 2020
 
+
+8.1.  Metadata Encryption
+
+   The "sender data" used to look up the key for the content encryption
+   is encrypted under AEAD using the MLSCiphertext sender_data_nonce and
+   the sender_data_key from the keyschedule.  It is encoded as an object
+   of the following form:
 
    struct {
        uint32 sender;
@@ -2113,13 +2120,6 @@ Internet-Draft                     MLS                    September 2020
    except for the "signature" field.  The signature also covers the
    GroupContext for the current epoch, so that signatures are specific
    to a given group and epoch.
-
-
-
-
-
-
-
 
 
 

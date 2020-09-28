@@ -2859,8 +2859,10 @@ the protocol.<a href="#section-7.12-4" class="pilcrow">¶</a></p>
 which MAY be used for authenticating the current group state. As with recovery
 keys, these are distinguished from exporter keys in that they have specific
 use affecting the MLS protocol.<a href="#section-7.13-1" class="pilcrow">¶</a></p>
-<p id="section-7.13-2">Authentication keys MAY be used to authenticate current or past group
-members out-of-band.<a href="#section-7.13-2" class="pilcrow">¶</a></p>
+<p id="section-7.13-2">Members of a group MAY compare their <code>authentication_secrets</code> out-of-band to
+authenticate that they share the same view of the group.<a href="#section-7.13-2" class="pilcrow">¶</a></p>
+<p id="section-7.13-3">If one of the parties is being actively impersonated by an attacker, their
+<code>authentication_secret</code> will differ from that of the other group members.<a href="#section-7.13-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
