@@ -1990,14 +1990,12 @@ Internet-Draft                     MLS                    September 2020
 7.13.  State Authentication Keys
 
    The main MLS key schedule provides a per-epoch
-   "authentication_secret".  Members of a group MAY compare their
-   "authentication_secrets" out-of-band to authenticate that they share
+   "authentication_secret".  If one of the parties is being actively
+   impersonated by an attacker, their "authentication_secret" will
+   differ from that of the other group members.  Thus, members of a
+   group MAY use their "authentication_secrets" within an out-of-band
+   authentication protocol to detect attacks or ensure that they share
    the same view of the group.
-
-   If one of the parties is being actively impersonated by an attacker,
-   their "authentication_secret" will differ from that of the other
-   group members, thus allowing the parties involved to detect such
-   attacks.
 
 8.  Message Framing
 
@@ -2010,6 +2008,8 @@ Internet-Draft                     MLS                    September 2020
    MLSCiphertext represents a signed and encrypted message, with
    protections for both the content of the message and related metadata.
    MLSPlaintext represents a message that is only signed, and not
+   encrypted.  Applications MUST use MLSCiphertext to encrypt
+   application messages and SHOULD use MLSCiphertext to encode handshake
 
 
 
@@ -2018,8 +2018,6 @@ Barnes, et al.            Expires 2 April 2021                 [Page 36]
 Internet-Draft                     MLS                    September 2020
 
 
-   encrypted.  Applications MUST use MLSCiphertext to encrypt
-   application messages and SHOULD use MLSCiphertext to encode handshake
    messages, but MAY transmit handshake messages encoded as MLSPlaintext
    objects in cases where it is necessary for the delivery service to
    examine such messages.
@@ -2067,6 +2065,8 @@ Internet-Draft                     MLS                    September 2020
        opaque signature<0..2^16-1>;
    } MLSPlaintext;
 
+   struct {
+
 
 
 Barnes, et al.            Expires 2 April 2021                 [Page 37]
@@ -2074,7 +2074,6 @@ Barnes, et al.            Expires 2 April 2021                 [Page 37]
 Internet-Draft                     MLS                    September 2020
 
 
-   struct {
        opaque group_id<0..255>;
        uint64 epoch;
        ContentType content_type;
@@ -2117,6 +2116,7 @@ Internet-Draft                     MLS                    September 2020
    except for the "signature" field.  The signature also covers the
    GroupContext for the current epoch, so that signatures are specific
    to a given group and epoch.
+
 
 
 
