@@ -1811,9 +1811,10 @@ Internet-Draft                     MLS                    September 2020
    object of a Welcome message sent to new members added in that epoch.
 
    enum {
-     external(0),
-     reinit(1),
-     branch(2),
+     reserved(0),
+     external(1),
+     reinit(2),
+     branch(3),
      (255)
    } PSKType;
 
@@ -1841,7 +1842,6 @@ Internet-Draft                     MLS                    September 2020
    On receiving a Commit with a "PreSharedKey" Proposal or a
    GroupSecrets object with the "psks" field set, the receiving Client
    includes them in the key schedule in the order listed in the commit
-   or in the "psks" field respectively.  For internal PSKs, the psk is
 
 
 
@@ -1850,6 +1850,7 @@ Barnes, et al.            Expires 2 April 2021                 [Page 33]
 Internet-Draft                     MLS                    September 2020
 
 
+   or in the "psks" field respectively.  For internal PSKs, the psk is
    defined as the "recovery_secret" of the group and epoch specified in
    the "PreSharedKeyID" object.  Finally, the "psk_secret" to be
    included in the Key Schedule is derived as follows (where "n" is the
@@ -1895,9 +1896,8 @@ psk_secret     = psk_secret_[i] || ... || psk_secret_[n]
    handshake_secret_[sender]_[0] =
        ExpandWithLabel(handshake_secret, "hs", [sender], nonce_length)
 
-   The base secret for each sender is used to initiate a symmetric hash
-   ratchet which generates a sequence of keys and nonces.  The sender
-   uses the j-th key/nonce pair in the sequence to encrypt (using the
+
+
 
 
 
@@ -1906,6 +1906,9 @@ Barnes, et al.            Expires 2 April 2021                 [Page 34]
 Internet-Draft                     MLS                    September 2020
 
 
+   The base secret for each sender is used to initiate a symmetric hash
+   ratchet which generates a sequence of keys and nonces.  The sender
+   uses the j-th key/nonce pair in the sequence to encrypt (using the
    AEAD) the j-th message they send during that epoch.  In particular,
    each key/nonce pair MUST NOT be used to encrypt more than one
    message.
@@ -1950,9 +1953,6 @@ Internet-Draft                     MLS                    September 2020
    two exported outputs from being generated with the same values and
    used for different functionalities.
 
-   The exported values are bound to the Group epoch from which the
-   "exporter_secret" is derived, hence reflects a particular state of
-   the Group.
 
 
 
@@ -1961,6 +1961,10 @@ Barnes, et al.            Expires 2 April 2021                 [Page 35]
 
 Internet-Draft                     MLS                    September 2020
 
+
+   The exported values are bound to the Group epoch from which the
+   "exporter_secret" is derived, hence reflects a particular state of
+   the Group.
 
    It is RECOMMENDED for the application generating exported values to
    refresh those values after a group operation is processed.
@@ -2002,14 +2006,10 @@ Internet-Draft                     MLS                    September 2020
    group, as well as signing to authenticate the sender within the
    group.
 
-
-
-
-
-
-
-
-
+   The two main structures involved are MLSPlaintext and MLSCiphertext.
+   MLSCiphertext represents a signed and encrypted message, with
+   protections for both the content of the message and related metadata.
+   MLSPlaintext represents a message that is only signed, and not
 
 
 
@@ -2018,10 +2018,6 @@ Barnes, et al.            Expires 2 April 2021                 [Page 36]
 Internet-Draft                     MLS                    September 2020
 
 
-   The two main structures involved are MLSPlaintext and MLSCiphertext.
-   MLSCiphertext represents a signed and encrypted message, with
-   protections for both the content of the message and related metadata.
-   MLSPlaintext represents a message that is only signed, and not
    encrypted.  Applications MUST use MLSCiphertext to encrypt
    application messages and SHOULD use MLSCiphertext to encode handshake
    messages, but MAY transmit handshake messages encoded as MLSPlaintext
@@ -2066,6 +2062,10 @@ Internet-Draft                     MLS                    September 2020
            case commit:
              Commit commit;
              opaque confirmation_tag<0..255>;
+       }
+
+       opaque signature<0..2^16-1>;
+   } MLSPlaintext;
 
 
 
@@ -2073,11 +2073,6 @@ Barnes, et al.            Expires 2 April 2021                 [Page 37]
 
 Internet-Draft                     MLS                    September 2020
 
-
-       }
-
-       opaque signature<0..2^16-1>;
-   } MLSPlaintext;
 
    struct {
        opaque group_id<0..255>;
@@ -2122,6 +2117,11 @@ Internet-Draft                     MLS                    September 2020
    except for the "signature" field.  The signature also covers the
    GroupContext for the current epoch, so that signatures are specific
    to a given group and epoch.
+
+
+
+
+
 
 
 
