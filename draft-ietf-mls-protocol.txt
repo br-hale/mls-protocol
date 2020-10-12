@@ -1738,25 +1738,25 @@ Barnes, et al.            Expires 15 April 2021                [Page 31]
 Internet-Draft                     MLS                      October 2020
 
 
-                 +=======================+===============+
-                 | Secret                | Label         |
-                 +=======================+===============+
-                 | sender_data_secret    | "sender data" |
-                 +-----------------------+---------------+
-                 | encryption_secret     | "encryption"  |
-                 +-----------------------+---------------+
-                 | exporter_secret       | "exporter"    |
-                 +-----------------------+---------------+
-                 | authentication_secret | "auth"        |
-                 +-----------------------+---------------+
-                 | confirmation_key      | "confirm"     |
-                 +-----------------------+---------------+
-                 | membership_key        | "membership"  |
-                 +-----------------------+---------------+
-                 | recovery_secret       | "recovery"    |
-                 +-----------------------+---------------+
+               +=======================+==================+
+               | Secret                | Label            |
+               +=======================+==================+
+               | sender_data_secret    | "sender data"    |
+               +-----------------------+------------------+
+               | encryption_secret     | "encryption"     |
+               +-----------------------+------------------+
+               | exporter_secret       | "exporter"       |
+               +-----------------------+------------------+
+               | authentication_secret | "authentication" |
+               +-----------------------+------------------+
+               | confirmation_key      | "confirm"        |
+               +-----------------------+------------------+
+               | membership_key        | "membership"     |
+               +-----------------------+------------------+
+               | recovery_secret       | "recovery"       |
+               +-----------------------+------------------+
 
-                                  Table 2
+                                 Table 2
 
 8.1.  Pre-Shared Keys
 
