@@ -2614,15 +2614,59 @@ psk_secret (or 0) -&gt; KDF.Extract = member_secret
 </pre><a href="#section-8-8" class="pilcrow">¶</a>
 </div>
 <p id="section-8-9">A number of secrets are derived from the epoch secret for different purposes:<a href="#section-8-9" class="pilcrow">¶</a></p>
-<p id="section-8-10">| Secret                | Label         |
-|:---------------|:---------|
-| <code>sender_data_secret</code>   | "sender data" |
-| <code>encryption_secret</code>      | "encryption"  |
-| <code>exporter_secret</code>         | "exporter"    |
-| <code>authentication_secret | "auth"  |
-| </code>confirmation_key<code>       | "confirm"     |
-| </code>membership_key<code>       | "membership"  |
-| </code>recovery_secret`         | "recovery"    |<a href="#section-8-10" class="pilcrow">¶</a></p>
+<table class="center" id="table-2">
+        <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<thead>
+          <tr>
+            <th class="text-left" rowspan="1" colspan="1">Secret</th>
+            <th class="text-left" rowspan="1" colspan="1">Label</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>sender_data_secret</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"sender data"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>encryption_secret</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"encryption"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>exporter_secret</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"exporter"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>authentication_secret</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"auth"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>confirmation_key</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"confirm"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>membership_key</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"membership"</td>
+          </tr>
+          <tr>
+            <td class="text-left" rowspan="1" colspan="1">
+              <code>recovery_secret</code>
+</td>
+            <td class="text-left" rowspan="1" colspan="1">"recovery"</td>
+          </tr>
+        </tbody>
+      </table>
 <div id="pre-shared-keys">
 <section id="section-8.1">
         <h3 id="name-pre-shared-keys">
@@ -4422,8 +4466,8 @@ CipherSuite MLS_LVL_KEM_AEAD_HASH_SIG = VALUE;
 uint16 CipherSuite;
 </pre><a href="#section-16.1-5" class="pilcrow">¶</a>
 </div>
-<table class="center" id="table-2">
-          <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
+<table class="center" id="table-3">
+          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Component</th>
@@ -4473,8 +4517,8 @@ is REQUIRED for a Y-&gt;N transition.<a href="#section-16.1-8.3" class="pilcrow"
 </li>
         </ul>
 <p id="section-16.1-9">Initial contents:<a href="#section-16.1-9" class="pilcrow">¶</a></p>
-<table class="center" id="table-3">
-          <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
+<table class="center" id="table-4">
+          <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -4538,8 +4582,8 @@ is REQUIRED for a Y-&gt;N transition.<a href="#section-16.1-8.3" class="pilcrow"
 different hashes per ciphersuite.  The mapping of ciphersuites to HPKE
 primitives, HMAC hash functions, and TLS signature schemes is as follows
 <span>[<a href="#I-D.irtf-cfrg-hpke" class="xref">I-D.irtf-cfrg-hpke</a>]</span> <span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span>:<a href="#section-16.1-11" class="pilcrow">¶</a></p>
-<table class="center" id="table-4">
-          <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
+<table class="center" id="table-5">
+          <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -4658,8 +4702,8 @@ is REQUIRED for a Y-&gt;N transition.<a href="#section-16.2-3.4" class="pilcrow"
 </li>
         </ul>
 <p id="section-16.2-4">Initial contents:<a href="#section-16.2-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-5">
-          <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
+<table class="center" id="table-6">
+          <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
@@ -4747,8 +4791,8 @@ is REQUIRED for a Y-&gt;N transition.<a href="#section-16.3-3.3" class="pilcrow"
 </li>
         </ul>
 <p id="section-16.3-4">Initial contents:<a href="#section-16.3-4" class="pilcrow">¶</a></p>
-<table class="center" id="table-6">
-          <caption><a href="#table-6" class="selfRef">Table 6</a></caption>
+<table class="center" id="table-7">
+          <caption><a href="#table-7" class="selfRef">Table 7</a></caption>
 <thead>
             <tr>
               <th class="text-left" rowspan="1" colspan="1">Value</th>
